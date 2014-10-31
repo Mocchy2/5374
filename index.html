@@ -54,11 +54,11 @@
 			navigator.geolocation.getCurrentPosition(function(position){ //現在地の取得
 				//取得した緯度経度をもとにマップを移動させる
 				map.setCenter(new google.maps.LatLng(position.coords.latitude,position.coords.longitude));
-			/*	var marker = new google.maps.Marker({   //マーカーを立てる
+				var marker = new google.maps.Marker({   //マーカーを立てる
 					position: result[0].geometry.location,
 					map: map
 
-				});*/			
+				});
 		}, function(){
 				alert('現在地を取得できません！'); //現在地が取得できなかった場合
 		});
