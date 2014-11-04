@@ -120,7 +120,7 @@ Code for Saitama    URL:
 							content: result[0].formatted_address //情報ウィンドウに何を表示させるか(ここでは現在地の住所)
 						});
 
-						google.maps.event.addListener(marker, 'click', function(){ //マーカーに対してクリックしたら情報ウィンドウを表示する
+					//	google.maps.event.addListener(marker, 'click', function(){ //マーカーに対してクリックしたら情報ウィンドウを表示する
 							infoWindow.open(map, marker); //情報ウィンドウを表示する
 						});
 					} else {
