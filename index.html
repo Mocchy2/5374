@@ -92,9 +92,8 @@ Code for Saitama    URL:
           <div id="help">
             
           <h3>地図の表示</h3>
-	<p>住所:<input type="text" id="address" value=""><input type="button" value="表示" onclick="moveMap();"></p>
-	<div id="map"></div>
-	<script>
+          <div id="map"></div> <!--地図を表示する領域-->
+          <script>
 		var latlng = new google.maps.LatLng(35.66, 139.69);
 		var options = {
 			zoom: 15,
