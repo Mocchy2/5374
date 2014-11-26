@@ -92,46 +92,59 @@ Code for Saitama    URL:
           <div id="help">
             
           <h3>地図の表示</h3>
-	<p>住所:<input type="text" id="address" value=""><input type="button" value="表示" onclick="moveMap();"></p>
-	<div id="map"></div>
+	<div id="map"></div> <!--地図を表示する領域-->
+
 	<script>
-		var latlng = new google.maps.LatLng(35.66, 139.69);
+		var geocoder = new google.maps.Geocoder(); //ジオコーダー
+		var latlng = new google.maps.LatLng(35.66, 139.69); //緯度経度を示すオブジェクト
 		var options = {
-			zoom: 15,
-			center: latlng,
-			mapTypeId: google.maps.MapTypeId.ROADMAP
+			zoom: 15, //地図のズームレベル
+			center: latlng, //地図の中心の緯度経度
+			mapTypeId: google.maps.MapTypeId.ROADMAP //地図の種類（ここでは通常の地図）
 		}
-		var map = new google.maps.Map(document.getElementById('map'), options);
+		var map = new google.maps.Map(document.getElementById('map'), options); //地図を作製する
 
-		if(navigator.geolocation){
-			navigator.geolocation.getCurrentPosition(function(position){
-				map.setCenter(new google.maps.LatLng(position.coords.latitude,position.coords.longitude));
-		}, function(){
-				alert('現在地を取得できません！');
-		});
 
-		} else {
-			alert('対応していません！');
-		}
+		/*現在地を取得する*/
+		function GetPos() {
+			if(navigator.geolocation){ //navigator（ブラウザのこと）がgeolocationに対応していた場合
+				navigator.geolocation.getCurrentPosition(function(position){ //現在地の取得
+					map.setCenter(new google.maps.LatLng(position.coords.latitude,position.coords.longitude)); //取得した緯度経度をもとにマップを移動させる
 
-		function moveMap(){
-			var geocoder = new google.maps.Geocoder();
-			geocoder.geocode({
-				'address': document.getElementById('address').value
-			}, function(result, status){
-				if(status == google.maps.GeocoderStatus.OK){
-					map.panTo(result[0].geometry.location);
-					var marker = new google.maps.Marker({
-						position: result[0].geometry.location,
-						map: map
+					var marker =new google.maps.Marker({ //マーカーを立てる
+						position: map.getCenter(), //latlngで求めた中心地を緯度経度で返す
+						map: map //描画先はマップ
 					});
-				} else {
-					alert("ERROR!");
-				}
-			});
-		}	
 
+					geocoder.geocode({ //
+						'latLng': map.getCenter()
+					}, function(result, status){
+						if(status == google.maps.GeocoderStatus.OK){
+
+
+						var infoWindow = new google.maps.InfoWindow({ //情報ウィンドウを表示させる
+							content: result[0].formatted_address //情報ウィンドウに何を表示させるか(ここでは現在地の住所)
+						});
+
+						google.maps.event.addListener(marker, 'click', function(){ //マーカーに対してクリックしたら情報ウィンドウを表示する
+							infoWindow.open(map, marker); //情報ウィンドウを表示する
+						});
+						} else {
+							alert("エラー！");
+						}
+					});
+
+			}, function(){
+				alert('現在地を取得できません！'); //現在地が取得できなかった場合
+			});
+
+			} else {
+				alert('対応していません！'); //ブラウザが対応していない場合
+			}
+		}
+	
 	</script>
+	<p><input type="button" onclick="GetPos()" value="現在地へ移動"></p>
             
           </div>
         </div>
