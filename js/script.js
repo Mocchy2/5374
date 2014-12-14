@@ -56,8 +56,7 @@ var AreaModel = function() {
 /**
   各ゴミのカテゴリを管理するクラスです。
 */
-var TrashModel = function(_lable, _cell, remarks) {
-  this.remarks = remarks;
+var TrashModel = function(_lable, _cell) {
   this.dayLabel;
   this.mostRecent;
   this.dayList;
@@ -83,9 +82,8 @@ var TrashModel = function(_lable, _cell, remarks) {
   for (var j in this.dayCell) {
     if (this.dayCell[j].length == 1) {
       result_text += "毎週" + this.dayCell[j] + "曜日 ";
-    } else if (this.dayCell[j].length == 2 && this.dayCell[j].substr(0,1) != "*") {
+    } else if (this.dayCell[j].length == 2) {
       result_text += "第" + this.dayCell[j].charAt(1) + this.dayCell[j].charAt(0) + "曜日 ";
-    } else if (this.dayCell[j].length == 2 && this.dayCell[j].substr(0,1) == "*") {
     } else {
       // 不定期回収の場合（YYYYMMDD指定）
       result_text = "不定期 ";
@@ -96,7 +94,7 @@ var TrashModel = function(_lable, _cell, remarks) {
 
   this.getDateLabel = function() {
     var result_text = this.mostRecent.getFullYear() + "/" + (1 + this.mostRecent.getMonth()) + "/" + this.mostRecent.getDate();
-    return this.getRemark() + this.dayLabel + " " + result_text;
+    return this.dayLabel + " " + result_text;
   }
 
   var day_enum = ["日", "月", "火", "水", "木", "金", "土"];
@@ -110,22 +108,6 @@ var TrashModel = function(_lable, _cell, remarks) {
     return -1;
   }
   /**
-   * このごみ収集日が特殊な条件を持っている場合備考を返します。収集日データに"*n" が入っている場合に利用されます
-   */
-  this.getRemark = function getRemark() {
-    var ret = "";
-    this.dayCell.forEach(function(day){
-      if (day.substr(0,1) == "*") {
-        remarks.forEach(function(remark){
-          if (remark.id == day.substr(1,1)){
-            ret += remark.text + "<br/>";
-          }
-        });
-      };
-    });
-    return ret;
-  }
-  /**
   このゴミの年間のゴミの日を計算します。
   センターが休止期間がある場合は、その期間１週間ずらすという実装を行っております。
 */
@@ -133,12 +115,10 @@ var TrashModel = function(_lable, _cell, remarks) {
     var day_mix = this.dayCell;
     var result_text = "";
     var day_list = new Array();
-
     // 定期回収の場合
     if (this.regularFlg == 1) {
 
       var today = new Date();
-
       // 12月 +3月　を表現
       for (var i = 0; i < MaxMonth; i++) {
 
@@ -151,7 +131,7 @@ var TrashModel = function(_lable, _cell, remarks) {
             continue;
         }
         for (var j in day_mix) {
-          //休止期間だったら、今後一週間ずらす。
+          //休止期間だったら、今後一週間ずらす。 
           var isShift = false;
 
           //week=0が第1週目です。
@@ -274,15 +254,6 @@ var TargetRowModel = function(data) {
   this.furigana = data[3];
 }
 
-/**
- * ゴミ収集日に関する備考を管理するクラスです。
- * remarks.csvのモデルです。
- */
-var RemarkModel = function(data) {
-  this.id = data[0];
-  this.text = data[1];
-}
-
 /* var windowHeight; */
 
 $(function() {
@@ -291,7 +262,8 @@ $(function() {
   var center_data = new Array();
   var descriptions = new Array();
   var areaModels = new Array();
-  var remarks = new Array();
+  var polygons = {};
+  var place_name = new String();
 /*   var descriptions = new Array(); */
 
 
@@ -336,7 +308,7 @@ $(function() {
         //２列目以降の処理
         for (var r = 2; r < 2 + MaxDescription; r++) {
           if (area_days_label[r]) {
-            var trash = new TrashModel(area_days_label[r], row[r], remarks);
+            var trash = new TrashModel(area_days_label[r], row[r]);
             area.trash.push(trash);
           }
         }
@@ -383,15 +355,71 @@ $(function() {
     });
   }
 
+  function selectAreaByLocationData() {
+  }
 
-  function createMenuList(after_action) {
-    // 備考データを読み込む
-    csvToArray("data/remarks.csv", function(data) {
-      data.shift();
-      for (var i in data) {
-        remarks.push(new RemarkModel(data[i]));
+  function takePolygon() {
+    $.ajax({
+      url: 'data/nonoichi_city.kml',
+      type: 'get',
+      dataType: 'xml',
+      success: function(xml) {
+       $(xml).find('Placemark').each(function(index, elem) {
+         var $elem = $(elem);
+         var name = $elem.find('name').text();
+         var coordinates = $elem.find('coordinates').text().split(' ');
+
+         var points = new Array(coordinates.length);
+         for(var i = 0, l = coordinates.length; i < l; i++) {
+           var point = coordinates[i].split(',');
+           points[i] = {
+             latitude: parseFloat(point[1]),
+             longitude: parseFloat(point[0])
+           };
+         }
+         polygons[name] = points;
+       });
       }
     });
+  }
+
+  function whereIsPointInsidePolygon(latitude, longitude) {
+    for(var name in polygons) {
+      var isInside = geolib.isPointInside(
+                      {latitude: latitude, longitude: longitude}, polygons[name]);
+      if(isInside) {
+        return name;
+      }
+    }
+
+    return '';
+  }
+
+  function takeUserLocation() {
+    navigator.geolocation.getCurrentPosition(
+      function(position) {
+        place_name = whereIsPointInsidePolygon(position.coords.latitude, position.coords.longitude);
+
+        var not_found = (place_name === '');
+        if(not_found) {
+            alert('お使いの場所を特定できません。リストから地域を選んで設定を行ってください。');
+            return;
+        }
+
+        var area_select_form = $("#select_area");
+        area_select_form.find('option').each(function(index, elem) {
+          if($(elem).text() === place_name) {
+            area_select_form[0].selectedIndex = index;
+            onChangeSelect(elem.value);
+          }
+        });
+      },
+      function(error) {
+        alert('お使いの端末で位置情報を取得できませんでした。\nリストからお住まいの地域を選択してください。');
+      });
+  }
+
+  function createMenuList(after_action) {
     csvToArray("data/description.csv", function(data) {
       data.shift();
       for (var i in data) {
@@ -432,12 +460,11 @@ $(function() {
     areaModel.calcMostRect();
     //トラッシュの近い順にソートします。
     areaModel.sortTrash();
-    var accordion_height = window.innerHeight / descriptions.length;
-    if(descriptions.length>4){
-      accordion_height = window.innerHeight / 4.1;
-      if (accordion_height>140) {accordion_height = window.innerHeight / descriptions.length;};
-      if (accordion_height<130) {accordion_height=130;};
-    }
+  var accordion_height = $(window).height() / descriptions.length;
+if(descriptions.length>5){
+    if (accordion_height<100) {accordion_height=100;};
+}
+    
     var styleHTML = "";
     var accordionHTML = "";
     //アコーディオンの分類から対応の計算を行います。
@@ -487,11 +514,16 @@ $(function() {
           } else {
             leftDayText = leftDay + "日後";
           }
-
-          styleHTML += '#accordion-group' + d_no + '{background-color:  ' + description.background + ';} ';
+          
+          //styleHTML += '#accordion-group' + d_no + '{background-color:  ' + description.background + ';} ';
+	  //IE対応
+          styleHTML = 'background-color:  ' + description.background ;
 
           accordionHTML +=
-            '<div class="accordion-group" id="accordion-group' + d_no + '">' +
+            //'<div class="accordion-group" id="accordion-group' + d_no + '">' +
+	    //IE対応
+            '<div class="accordion-group" id="accordion-group' + d_no + '" style="' + styleHTML + '">' +
+
             '<div class="accordion-heading">' +
             '<a class="accordion-toggle" style="height:' + accordion_height + 'px" data-toggle="collapse" data-parent="#accordion" href="#collapse' + i + '">' +
             '<div class="left-day">' + leftDayText + '</div>' +
@@ -513,15 +545,16 @@ $(function() {
             "</div>";
       }
     }
-
-    $("#accordion-style").html('<!-- ' + styleHTML + ' -->');
+    
+    //IE対応
+    //$("#accordion-style").html('<!-- ' + styleHTML + ' -->');
 
     var accordion_elm = $("#accordion");
     accordion_elm.html(accordionHTML);
 
     $('html,body').animate({scrollTop: 0}, 'fast');
 
-    //アコーディオンのラベル部分をクリックしたら
+    //アコーディオンのラベル部分をクリックしたら  
     $(".accordion-body").on("shown.bs.collapse", function() {
       var body = $('body');
       var accordion_offset = $($(this).parent().get(0)).offset().top;
@@ -529,7 +562,7 @@ $(function() {
         scrollTop: accordion_offset
       }, 50);
     });
-    //アコーディオンの非表示部分をクリックしたら
+    //アコーディオンの非表示部分をクリックしたら  
     $(".accordion-body").on("hidden.bs.collapse", function() {
       if ($(".in").length == 0) {
         $("html, body").scrollTop(0);
@@ -571,9 +604,17 @@ $(function() {
     onChangeSelect(row_index);
   });
 
+  $('#select_by_location_data').on('click', function() {
+    if(!navigator.geolocation) {
+      alert('お使いの端末で位置情報を利用できません。\nリストからお住まいの地域を選択してください。');
+    }
+
+    takeUserLocation();
+  });
+
   //-----------------------------------
   //位置情報をもとに地域を自動的に設定する処理です。
-  //これから下は現在、利用されておりません。
+  //これから下は現在、利用されておりません。 
   //将来的に使うかもしれないので残してあります。
   $("#gps_area").click(function() {
     navigator.geolocation.getCurrentPosition(function(position) {
@@ -618,4 +659,5 @@ $(function() {
     }
   }
   updateAreaList();
+  takePolygon();
 });
