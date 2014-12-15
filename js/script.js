@@ -360,7 +360,7 @@ $(function() {
 
   function takePolygon() {
     $.ajax({
-      url: 'data/nonoichi_city.kml',
+      url: 'data/sakado_city.kml',
       type: 'get',
       dataType: 'xml',
       success: function(xml) {
