@@ -82,7 +82,7 @@ Code for Saitama    URL:
           </div>
         </div>
       </div>
-    </div
+    </div>
     
     <div class="accordion-group-top">
       <div class="accordion-heading">
