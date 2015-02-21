@@ -85,9 +85,65 @@ Code for Saitama    URL:
     
     <div class="accordion-group-top">
       <div class="accordion-heading">
-        <a class="accordion-toggle-top" data-toggle="collapse" data-parent="#accordion3" href="#collapse3_1">ゴミ区分の検索</a>
+        <a class="accordion-toggle-top" data-toggle="collapse" data-parent="#accordion3" href="#collapse3_1">地図表示</a>
       </div>
       <div id="collapse3_1" class="accordion-body collapse">
+        <div class="accordion-inner">
+          <div id="help">
+            
+          <h3>地図の表示</h3>
+	<p>住所:<input type="text" id="address" value=""><input type="button" value="表示" onclick="moveMap();"></p>
+	<div id="map"></div>
+	<script>
+		var latlng = new google.maps.LatLng(35.66, 139.69);
+		var options = {
+			zoom: 15,
+			center: latlng,
+			mapTypeId: google.maps.MapTypeId.ROADMAP
+		}
+		var map = new google.maps.Map(document.getElementById('map'), options);
+
+		if(navigator.geolocation){
+			navigator.geolocation.getCurrentPosition(function(position){
+				map.setCenter(new google.maps.LatLng(position.coords.latitude,position.coords.longitude));
+		}, function(){
+				alert('現在地を取得できません！');
+		});
+
+		} else {
+			alert('対応していません！');
+		}
+
+		function moveMap(){
+			var geocoder = new google.maps.Geocoder();
+			geocoder.geocode({
+				'address': document.getElementById('address').value
+			}, function(result, status){
+				if(status == google.maps.GeocoderStatus.OK){
+					map.panTo(result[0].geometry.location);
+					var marker = new google.maps.Marker({
+						position: result[0].geometry.location,
+						map: map
+					});
+				} else {
+					alert("ERROR!");
+				}
+			});
+		}	
+
+	</script>
+            
+          </div>
+        </div>
+      </div>
+    </div>  
+	<hr>
+    
+    <div class="accordion-group-top">
+      <div class="accordion-heading">
+        <a class="accordion-toggle-top" data-toggle="collapse" data-parent="#accordion3" href="#collapse3_2">ゴミ区分の検索</a>
+      </div>
+      <div id="collapse3_2" class="accordion-body collapse">
         <div class="accordion-inner">
           <div id="help"＞
           <h2>プルダウンメニューの表示</h2>
