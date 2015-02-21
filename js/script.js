@@ -1,663 +1,182 @@
-"use strict";
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8">
+    <title>5374坂戸市(仮)</title>  
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0" />
+    <link rel="apple-touch-icon-precomposed" href="apple-touch-icon-precomposed.png" />
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet" media="screen" />
+    <link href="css/custom.css" rel="stylesheet" media="screen" />
 
-/**
-  エリア(ごみ処理の地域）を管理するクラスです。
-*/
-var AreaModel = function() {
-  this.label;
-  this.centerName;
-  this.center;
-  this.trash = new Array();
-  /**
-  各ゴミのカテゴリに対して、最も直近の日付を計算します。
-*/
-  this.calcMostRect = function() {
-    for (var i = 0; i < this.trash.length; i++) {
-      this.trash[i].calcMostRect(this);
-    }
-  }
-  /**
-    休止期間（主に年末年始）かどうかを判定します。
-  */
-  this.isBlankDay = function(currentDate) {
-    var period = [this.center.startDate, this.center.endDate];
+	<script src="http://maps.google.com/maps/api/js?sensor=true&langage=ja"></script>
+	<style>
+		#map {
+			width: 280px;
+			height: 280px;
+		}
+	</style>
 
-    if (period[0].getTime() <= currentDate.getTime() &&
-      currentDate.getTime() <= period[1].getTime()) {
-      return true;
-    }
-    return false;
-  }
-  /**
-    ゴミ処理センターを登録します。
-    名前が一致するかどうかで判定を行っております。
-  */
-  this.setCenter = function(center_data) {
-    for (var i in center_data) {
-      if (this.centerName == center_data[i].name) {
-        this.center = center_data[i];
-      }
-    }
-  }
-  /**
-  ゴミのカテゴリのソートを行います。
-*/
-  this.sortTrash = function() {
-    this.trash.sort(function(a, b) {
-      var at = a.mostRecent.getTime();
-      var bt = b.mostRecent.getTime();
-      if (at < bt) return -1;
-      if (at > bt) return 1;
-      return 0;
-    });
-  }
-}
-
-/**
-  各ゴミのカテゴリを管理するクラスです。
-*/
-var TrashModel = function(_lable, _cell) {
-  this.dayLabel;
-  this.mostRecent;
-  this.dayList;
-  this.mflag = new Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-  if (_cell.search(/:/) >= 0) {
-    var flag = _cell.split(":");
-    this.dayCell = flag[0].split(" ");
-    var mm = flag[1].split(" ");
-  } else {
-    this.dayCell = _cell.split(" ");
-    var mm = new Array("4", "5", "6", "7", "8", "9", "10", "11", "12", "1", "2", "3");
-  }
-  for (var m in mm) {
-    this.mflag[mm[m] - 1] = 1;
-  }
-  this.label = _lable;
-  this.description;
-  this.regularFlg = 1;      // 定期回収フラグ（デフォルトはオン:1）
-
-  var result_text = "";
-  var today = new Date();
-
-  for (var j in this.dayCell) {
-    if (this.dayCell[j].length == 1) {
-      result_text += "毎週" + this.dayCell[j] + "曜日 ";
-    } else if (this.dayCell[j].length == 2) {
-      result_text += "第" + this.dayCell[j].charAt(1) + this.dayCell[j].charAt(0) + "曜日 ";
-    } else {
-      // 不定期回収の場合（YYYYMMDD指定）
-      result_text = "不定期 ";
-      this.regularFlg = 0;  // 定期回収フラグオフ
-    }
-  }
-  this.dayLabel = result_text;
-
-  this.getDateLabel = function() {
-    var result_text = this.mostRecent.getFullYear() + "/" + (1 + this.mostRecent.getMonth()) + "/" + this.mostRecent.getDate();
-    return this.dayLabel + " " + result_text;
-  }
-
-  var day_enum = ["日", "月", "火", "水", "木", "金", "土"];
-
-  function getDayIndex(str) {
-    for (var i = 0; i < day_enum.length; i++) {
-      if (day_enum[i] == str) {
-        return i;
-      }
-    };
-    return -1;
-  }
-  /**
-  このゴミの年間のゴミの日を計算します。
-  センターが休止期間がある場合は、その期間１週間ずらすという実装を行っております。
-*/
-  this.calcMostRect = function(areaObj) {
-    var day_mix = this.dayCell;
-    var result_text = "";
-    var day_list = new Array();
-    // 定期回収の場合
-    if (this.regularFlg == 1) {
-
-      var today = new Date();
-      // 12月 +3月　を表現
-      for (var i = 0; i < MaxMonth; i++) {
-
-        var curMonth = today.getMonth() + i;
-        var curYear = today.getFullYear() + Math.floor(curMonth / 12);
-        var month = (curMonth % 12) + 1;
-
-        // 収集が無い月はスキップ
-        if (this.mflag[month - 1] == 0) {
-            continue;
-        }
-        for (var j in day_mix) {
-          //休止期間だったら、今後一週間ずらす。 
-          var isShift = false;
-
-          //week=0が第1週目です。
-          for (var week = 0; week < 5; week++) {
-            //4月1日を起点として第n曜日などを計算する。
-            var date = new Date(curYear, month - 1, 1);
-            var d = new Date(date);
-            //コンストラクタでやろうとするとうまく行かなかった。。
-            //
-            //4月1日を基準にして曜日の差分で時間を戻し、最大５週までの増加させて毎週を表現
-            d.setTime(date.getTime() + 1000 * 60 * 60 * 24 *
-              ((7 + getDayIndex(day_mix[j].charAt(0)) - date.getDay()) % 7) + week * 7 * 24 * 60 * 60 * 1000
-            );
-            //年末年始のずらしの対応
-            //休止期間なら、今後の日程を１週間ずらす
-            if (areaObj.isBlankDay(d)) {
-              if (WeekShift) {
-                isShift = true;
-              } else {
-                continue;
-              }
-            }
-            if (isShift) {
-              d.setTime(d.getTime() + 7 * 24 * 60 * 60 * 1000);
-            }
-            //同じ月の時のみ処理したい
-            if (d.getMonth() != (month - 1) % 12) {
-              continue;
-            }
-            //特定の週のみ処理する
-            if (day_mix[j].length > 1) {
-              if (week != day_mix[j].charAt(1) - 1) {
-                continue;
-              }
-            }
-
-            day_list.push(d);
-          }
-        }
-      }
-    } else {
-      // 不定期回収の場合は、そのまま指定された日付をセットする
-      for (var j in day_mix) {
-        var year = parseInt(day_mix[j].substr(0, 4));
-        var month = parseInt(day_mix[j].substr(4, 2)) - 1;
-        var day = parseInt(day_mix[j].substr(6, 2));
-        var d = new Date(year, month, day);
-        day_list.push(d);
-      }
-    }
-    //曜日によっては日付順ではないので最終的にソートする。
-    //ソートしなくてもなんとなりそうな気もしますが、とりあえずソート
-    day_list.sort(function(a, b) {
-      var at = a.getTime();
-      var bt = b.getTime();
-      if (at < bt) return -1;
-      if (at > bt) return 1;
-      return 0;
-    })
-    //直近の日付を更新
-    var now = new Date();
-
-    for (var i in day_list) {
-      if (this.mostRecent == null && now.getTime() < day_list[i].getTime() + 24 * 60 * 60 * 1000) {
-        this.mostRecent = day_list[i];
-        break;
-      }
-    };
-
-    this.dayList = day_list;
-  }
-  /**
-   計算したゴミの日一覧をリスト形式として取得します。
-  */
-  this.getDayList = function() {
-    var day_text = "<ul>";
-    for (var i in this.dayList) {
-      var d = this.dayList[i];
-      day_text += "<li>" + d.getFullYear() + "/" + (d.getMonth() + 1) + "/" + d.getDate() + "</li>";
-    };
-    day_text += "</ul>";
-    return day_text;
-  }
-}
-/**
-センターのデータを管理します。
-*/
-var CenterModel = function(row) {
-  function getDay(center, index) {
-    var tmp = center[index].split("/");
-    return new Date(tmp[0], tmp[1] - 1, tmp[2]);
-  }
-
-  this.name = row[0];
-  this.startDate = getDay(row, 1);
-  this.endDate = getDay(row, 2);
-}
-/**
-* ゴミのカテゴリを管理するクラスです。
-* description.csvのモデルです。
-*/
-var DescriptionModel = function(data) {
-  this.targets = new Array();
-
-  this.label = data[0];
-  this.sublabel = data[1];//not used
-  this.description = data[2];//not used
-  this.styles = data[3];
-  this.background = data[4];
-
-}
-/**
- * ゴミのカテゴリの中のゴミの具体的なリストを管理するクラスです。
- * target.csvのモデルです。
- */
-var TargetRowModel = function(data) {
-  this.type = data[0];
-  this.name = data[1];
-  this.notice = data[2];
-  this.furigana = data[3];
-}
-
-/* var windowHeight; */
-
-$(function() {
-/*   windowHeight = $(window).height(); */
-
-  var center_data = new Array();
-  var descriptions = new Array();
-  var areaModels = new Array();
-  var polygons = {};
-  var place_name = new String();
-/*   var descriptions = new Array(); */
-
-
-  function getSelectedAreaName() {
-    return localStorage.getItem("selected_area_name");
-  }
-
-  function setSelectedAreaName(name) {
-    localStorage.setItem("selected_area_name", name);
-  }
-
-  function csvToArray(filename, cb) {
-    $.get(filename, function(csvdata) {
-      //CSVのパース作業
-      //CRの解析ミスがあった箇所を修正しました。
-      //以前のコードだとCRが残ったままになります。
-      // var csvdata = csvdata.replace("\r/gm", ""),
-       csvdata = csvdata.replace(/\r/gm, "");
-      var line = csvdata.split("\n"),
-          ret = [];
-      for (var i in line) {
-        //空行はスルーする。
-        if (line[i].length == 0) continue;
-
-        var row = line[i].split(",");
-        ret.push(row);
-      }
-      cb(ret);
-    });
-  }
-
-  function updateAreaList() {
-    csvToArray("data/area_days.csv", function(tmp) {
-      var area_days_label = tmp.shift();
-      for (var i in tmp) {
-        var row = tmp[i];
-        var area = new AreaModel();
-        area.label = row[0];
-        area.centerName = row[1];
-
-        areaModels.push(area);
-        //２列目以降の処理
-        for (var r = 2; r < 2 + MaxDescription; r++) {
-          if (area_days_label[r]) {
-            var trash = new TrashModel(area_days_label[r], row[r]);
-            area.trash.push(trash);
-          }
-        }
-      }
-
-      csvToArray("data/center.csv", function(tmp) {
-        //ゴミ処理センターのデータを解析します。
-        //表示上は現れませんが、
-        //金沢などの各処理センターの休止期間分は一週間ずらすという法則性のため
-        //例えば第一金曜日のときは、一周ずらしその月だけ第二金曜日にする
-        tmp.shift();
-        for (var i in tmp) {
-          var row = tmp[i];
-
-          var center = new CenterModel(row);
-          center_data.push(center);
-        }
-        //ゴミ処理センターを対応する各地域に割り当てます。
-        for (var i in areaModels) {
-          var area = areaModels[i];
-          area.setCenter(center_data);
-        };
-        //エリアとゴミ処理センターを対応後に、表示のリストを生成する。
-        //ListメニューのHTML作成
-        var selected_name = getSelectedAreaName();
-        var area_select_form = $("#select_area");
-        var select_html = "";
-        select_html += '<option value="-1">地域を選択してください</option>';
-        for (var row_index in areaModels) {
-          var area_name = areaModels[row_index].label;
-          var selected = (selected_name == area_name) ? 'selected="selected"' : "";
-
-          select_html += '<option value="' + row_index + '" ' + selected + " >" + area_name + "</option>";
-        }
-
-        //デバッグ用
-        if (typeof dump == "function") {
-          dump(areaModels);
-        }
-        //HTMLへの適応
-        area_select_form.html(select_html);
-        area_select_form.change();
-      });
-    });
-  }
-
-  function selectAreaByLocationData() {
-  }
-
-  function takePolygon() {
-    $.ajax({
-      url: 'data/sakado_city.kml',
-      type: 'get',
-      dataType: 'xml',
-      success: function(xml) {
-       $(xml).find('Placemark').each(function(index, elem) {
-         var $elem = $(elem);
-         var name = $elem.find('name').text();
-         var coordinates = $elem.find('coordinates').text().split(' ');
-
-         var points = new Array(coordinates.length);
-         for(var i = 0, l = coordinates.length; i < l; i++) {
-           var point = coordinates[i].split(',');
-           points[i] = {
-             latitude: parseFloat(point[1]),
-             longitude: parseFloat(point[0])
-           };
-         }
-         polygons[name] = points;
-       });
-      }
-    });
-  }
-
-  function whereIsPointInsidePolygon(latitude, longitude) {
-    for(var name in polygons) {
-      var isInside = geolib.isPointInside(
-                      {latitude: latitude, longitude: longitude}, polygons[name]);
-      if(isInside) {
-        return name;
-      }
-    }
-
-    return '';
-  }
-
-  function takeUserLocation() {
-    navigator.geolocation.getCurrentPosition(
-      function(position) {
-        place_name = whereIsPointInsidePolygon(position.coords.latitude, position.coords.longitude);
-
-        var not_found = (place_name === '');
-        if(not_found) {
-            alert('お使いの場所を特定できません。リストから地域を選んで設定を行ってください。');
-            return;
-        }
-
-        var area_select_form = $("#select_area");
-        area_select_form.find('option').each(function(index, elem) {
-          if($(elem).text() === place_name) {
-            area_select_form[0].selectedIndex = index;
-            onChangeSelect(elem.value);
-          }
-        });
-      },
-      function(error) {
-        alert('お使いの端末で位置情報を取得できませんでした。\nリストからお住まいの地域を選択してください。');
-      });
-  }
-
-  function createMenuList(after_action) {
-    csvToArray("data/description.csv", function(data) {
-      data.shift();
-      for (var i in data) {
-        descriptions.push(new DescriptionModel(data[i]));
-      }
-
-      csvToArray("data/target.csv", function(data) {
-
-        data.shift();
-        for (var i in data) {
-          var row = new TargetRowModel(data[i]);
-          for (var j = 0; j < descriptions.length; j++) {
-            //一致してるものに追加する。
-            if (descriptions[j].label == row.type) {
-              descriptions[j].targets.push(row);
-              break;
-            }
-          };
-        }
-        after_action();
-        $("#accordion2").show();
-
-      });
-
-    });
-
-  }
-
-  function updateData(row_index) {
-    //SVG が使えるかどうかの判定を行う。
-    //TODO Android 2.3以下では見れない（代替の表示も含め）不具合が改善されてない。。
-    //参考 http://satussy.blogspot.jp/2011/12/javascript-svg.html
-    var ableSVG = (window.SVGAngle !== void 0);
-    //var ableSVG = false;  // SVG未使用の場合、descriptionの1項目目を使用
-    var areaModel = areaModels[row_index];
-    var today = new Date();
-    //直近の一番近い日付を計算します。
-    areaModel.calcMostRect();
-    //トラッシュの近い順にソートします。
-    areaModel.sortTrash();
-  var accordion_height = $(window).height() / descriptions.length;
-if(descriptions.length>5){
-    if (accordion_height<100) {accordion_height=100;};
-}
+  </head>
+  
+  <body>
+  <style id="accordion-style" type="text/css"></style>
+  <div id="accordion"></div>
+  <select class="form-control" id="select_area"></select>
+  <div class="accordion" id="accordion3">
     
-    var styleHTML = "";
-    var accordionHTML = "";
-    //アコーディオンの分類から対応の計算を行います。
-    for (var i in areaModel.trash) {
-      var trash = areaModel.trash[i];
-
-      for (var d_no in descriptions) {
-        var description = descriptions[d_no];
-       if (description.label != trash.label) {
-          continue;
-        }
-
-          var target_tag = "";
-          var furigana = "";
-          var target_tag = "";
-          var targets = description.targets;
-          for (var j in targets) {
-            var target = targets[j];
-            if (furigana != target.furigana) {
-              if (furigana != "") {
-                target_tag += "</ul>";
-              }
-
-              furigana = target.furigana;
-
-              target_tag += '<h4 class="initials">' + furigana + "</h4>";
-              target_tag += "<ul>";
-            }
-
-            target_tag += '<li style="list-style:none;">' + target.name + "</li>";
-            target_tag += '<p class="note">' + target.notice + "</p>";
-          }
-
-          target_tag += "</ul>";
-
-          var dateLabel = trash.getDateLabel();
-          //あと何日かを計算する処理です。
-          var leftDay = Math.ceil((trash.mostRecent.getTime() - today.getTime()) / (1000 * 60 * 60 * 24))
-
-          var leftDayText = "";
-          if (leftDay == 0) {
-            leftDayText = "今日";
-          } else if (leftDay == 1) {
-            leftDayText = "明日";
-          } else if (leftDay == 2) {
-            leftDayText = "明後日"
-          } else {
-            leftDayText = leftDay + "日後";
-          }
-          
-          //styleHTML += '#accordion-group' + d_no + '{background-color:  ' + description.background + ';} ';
-	  //IE対応
-          styleHTML = 'background-color:  ' + description.background ;
-
-          accordionHTML +=
-            //'<div class="accordion-group" id="accordion-group' + d_no + '">' +
-	    //IE対応
-            '<div class="accordion-group" id="accordion-group' + d_no + '" style="' + styleHTML + '">' +
-
-            '<div class="accordion-heading">' +
-            '<a class="accordion-toggle" style="height:' + accordion_height + 'px" data-toggle="collapse" data-parent="#accordion" href="#collapse' + i + '">' +
-            '<div class="left-day">' + leftDayText + '</div>' +
-            '<div class="accordion-table" >';
-          if (ableSVG && SVGLabel) {
-            accordionHTML += '<img src="' + description.styles + '" alt="' + description.label + '"  />';
-          } else {
-            accordionHTML += '<p class="text-center">' + description.label + "</p>";
-          }
-          accordionHTML += "</div>" +
-            '<h6><p class="text-left date">' + dateLabel + "</p></h6>" +
-            "</a>" +
-            "</div>" +
-            '<div id="collapse' + i + '" class="accordion-body collapse">' +
-            '<div class="accordion-inner">' +
-            description.description + "<br />" + target_tag +
-            '<div class="targetDays"></div></div>' +
-            "</div>" +
-            "</div>";
-      }
-    }
+    <div class="accordion-group-top">
+      <div class="accordion-heading">
+        <a class="accordion-toggle-top" data-toggle="collapse" data-parent="#accordion3" href="#collapse3_0">5374.jpについて</a>
+      </div>
+      <div id="collapse3_0" class="accordion-body collapse">
+        <div class="accordion-inner">
+          <div id="help">
+ゴミの問題は、どの地域でも深刻になりつつあります。
+Code for Kanazawaでは、先ずは正しいゴミの捨て方に注目しました。
+目的と使い方は、とてもシンプルです。
+            <h2>目的</h2>
+「いつ、どのゴミが収集されているのか？」
+例えばお引っ越しをされた場合や、新しく坂戸市に住むことになった時、このアプリを使えば、すぐに分かるようにデザインされています。
+            <h2>使い方</h2>
+            <h3>色でゴミのジャンルを表示</h3>
+            <p>一番近いゴミの日とジャンルを上から順に表示しています。</p>
+            <h3>捨てる事が可能なゴミ</h3>
+            <p>ゴミのジャンルをタップすると、捨てることが可能なゴミの一覧を見ることができます</p>
+            <h3>設定</h3>
+            <p>お住まいの地域を選択することで、ゴミ収集日が自動的に更新されます。</p>
+            <div id="caption">
+              <h4>提供されるゴミ情報について</h4>
+              <p>坂戸市が公開しているデータから立正大学地球環境科学部環境システム学科後藤研究室が独自に解析し、アプリに実装しました。</p>
+             
+              <h4>ライセンスについて</h4>
+              <p>本アプリの著作権はCode for Kanazawaに帰属します。</p>
+            </div>
+            <div id="cfk">
+              <h3>Code for Kanazawaについて</h3>
+              <p>コードで、世界をHappyに。<br />
+各地域には様々な課題があり、解決するためのコミュニティ（団体）も数多くあります。<br />
+課題の中には、ITやデザインの力で解決できるものも多くありますが、全てのコミュニティにそのスキル（技術）が備わっているわけではありません。<br /><br />
+Code for Kanazawa（CfK）は、市民の課題を集め、その課題を整理・分析した上で、メンバーが実際に課題解決となるソフトウェアやハードウェア（仕組みや方法）を開発します。<br />
+私たちは、デザインをして、ソフトウェアコードを書き、課題を解決するサービスを完成させるのです。さらに、そのサービスを提供し続ける力も持ちます。<br /><br />
+CfKは市民のための組織です。行政や民間企業の影響を受けずに中立・公益の立場から物事を判断するよう心がけています。<br /><br />
+公式サイト<br />
+<a href="http://www.codeforkanazawa.org/" style=" color: #FF0000;text-decoration: underline;">http://www.codeforkanazawa.org/</a>
+<br>5374.jp<br />
+<a href="http://5374.jp/index.html" target="_blank"style=" color: #FF0000;text-decoration: underline;">http://5374.jp/index.html</a></p>
+            </div>
+            <div style="border:solid 1px #0fff00;"></div><br>
+              <div id="ris">
+5374.jp 坂戸市版は立正大学地球環境科学部環境システム学科後藤研究室とCode for Saitamaにより制作されました。<br><br>
+今後スマートフォンのGPSから位置情報を取得する機能を追加する予定です。<br>
+間違い・ご要望等ございましたら、下記よりご連絡くださいますようお願い致します。<br>
+<br>
+Code for Saitama    URL:
+<a href="https://www.facebook.com/groups/186097664924714/" target="_blank"style=" color: #FF0000;text-decoration: underline;">https://www.facebook.com/groups...</a><br>
+立正大学　地球環境科学部　環境システム学科　<br>
+後藤研究室（〒360-0194　熊谷市万吉1700）<a href="https://twitter.com/gotshin" target="_blank"style=" color: #0000FF;text-decoration: underline;">@gotshin</a>
+              </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <hr>
     
-    //IE対応
-    //$("#accordion-style").html('<!-- ' + styleHTML + ' -->');
+    <div class="accordion-group-top">
+      <div class="accordion-heading">
+        <a class="accordion-toggle-top" data-toggle="collapse" data-parent="#accordion3" href="#collapse3_1">地図表示</a>
+      </div>
+      <div id="collapse3_1" class="accordion-body collapse">
+        <div class="accordion-inner">
+          <div id="help">
+          <h3>地図の表示</h3>
+	<p>住所：<input type="text" id="address" value=""><input type="button" value="表示" onclick="moveMap();"></p>
+	<div id="map"></div>
+	<script>
+		var latlng = new google.maps.LatLng(35.66, 139.69);
+		var options = {
+			zoom: 15,
+			center: latlng,
+			mapTypeId: google.maps.MapTypeId.ROADMAP
+		}
+		var map = new google.maps.Map(document.getElementById('map'), options);
 
-    var accordion_elm = $("#accordion");
-    accordion_elm.html(accordionHTML);
+		if(navigator.geolocation){
+			navigator.geolocation.getCurrentPosition(function(position){
+				map.setCenter(new google.maps.LatLng(position.coords.latitude,position.coords.longitude));
+		}, function(){
+				alert('現在地を取得できません！');
+		});
 
-    $('html,body').animate({scrollTop: 0}, 'fast');
+		} else {
+			alert('対応していません！');
+		}
 
-    //アコーディオンのラベル部分をクリックしたら  
-    $(".accordion-body").on("shown.bs.collapse", function() {
-      var body = $('body');
-      var accordion_offset = $($(this).parent().get(0)).offset().top;
-      body.animate({
-        scrollTop: accordion_offset
-      }, 50);
-    });
-    //アコーディオンの非表示部分をクリックしたら  
-    $(".accordion-body").on("hidden.bs.collapse", function() {
-      if ($(".in").length == 0) {
-        $("html, body").scrollTop(0);
-      }
-    });
-  }
-
-  function onChangeSelect(row_index) {　
-    if (row_index == -1) {
-      $("#accordion").html("");
-      setSelectedAreaName("");
-      return;
-    }
-    setSelectedAreaName(areaModels[row_index].label);
-
-    if ($("#accordion").children().length === 0 && descriptions.length === 0) {
-
-      createMenuList(function() {
-        updateData(row_index);
-      });
-    } else {
-      updateData(row_index);
-    }
-  }
-
-
-
-  function getAreaIndex(area_name) {
-    for (var i in areaModels) {
-      if (areaModels[i].label == area_name) {
-        return i;
-      }
-    }
-    return -1;
-  }
-  //リストが選択されたら
-  $("#select_area").change(function(data) {
-    var row_index = $(data.target).val();
-    onChangeSelect(row_index);
-  });
-
-  $('#select_by_location_data').on('click', function() {
-    if(!navigator.geolocation) {
-      alert('お使いの端末で位置情報を利用できません。\nリストからお住まいの地域を選択してください。');
-    }
-
-    takeUserLocation();
-  });
-
-  //-----------------------------------
-  //位置情報をもとに地域を自動的に設定する処理です。
-  //これから下は現在、利用されておりません。 
-  //将来的に使うかもしれないので残してあります。
-  $("#gps_area").click(function() {
-    navigator.geolocation.getCurrentPosition(function(position) {
-      $.getJSON("area_candidate.php", {
-        latitude: position.coords.latitude,
-        longitude: position.coords.longitude
-      }, function(data) {
-        if (data.result == true) {
-          var area_name = data.candidate;
-          var index = getAreaIndex(area_name);
-          $("#select_area").val(index).change();
-          alert(area_name + "が設定されました");
-        } else {
-          alert(data.reason);
-        }
-      })
-
-    }, function(error) {
-      alert(getGpsErrorMessage(error));
-    });
-  });
-
-  if (getSelectedAreaName() == null) {
-    $("#accordion2").show();
-    $("#collapseZero").addClass("in");
-  }
-  if (!navigator.geolocation) {
-    $("#gps_area").css("display", "none");
-  }
-
-  function getGpsErrorMessage(error) {
-    switch (error.code) {
-      case error.PERMISSION_DENIED:
-        return "User denied the request for Geolocation."
-      case error.POSITION_UNAVAILABLE:
-        return "Location information is unavailable."
-      case error.TIMEOUT:
-        return "The request to get user location timed out."
-      case error.UNKNOWN_ERROR:
-      default:
-        return "An unknown error occurred."
-    }
-  }
-  updateAreaList();
-  takePolygon();
-});
+		function moveMap(){
+			var geocoder = new google.maps.Geocoder();
+			geocoder.geocode({
+				'address': document.getElementById('address').value
+			}, function(result, status){
+				if(status == google.maps.GeocoderStatus.OK){
+					map.panTo(result[0].geometry.location);
+					var marker = new google.maps.Marker({
+						position: result[0].geometry.location,
+						map: map
+					});
+				} else {
+					alert("ERROR!");
+				}
+			});
+		}	
+	</script>
+            
+          </div>
+        </div>
+      </div>
+    </div>  
+    <hr>
+    
+    <div class="accordion-group-top">
+      <div class="accordion-heading">
+        <a class="accordion-toggle-top" data-toggle="collapse" data-parent="#accordion3" href="#collapse3_2">ゴミ区分の検索</a>
+      </div>
+      <div id="collapse3_2" class="accordion-body collapse">
+        <div class="accordion-inner">
+          <div id="help"＞
+          <h2>プルダウンメニューで選択</h2>
+          <select id="gominohinmoku">
+          	<option value="sentaku">ゴミの品目を選択してください</option>
+          	<option value="sentaku">アイロン</option>
+          	<option value="sentaku">アイロン台</option>
+      		<option value="sentaku">ICレコーダー</option>
+          </select>
+	<p>ゴミの品目：<input type="text" id="kubun" value=""><input type="button" value="表示" onclick=";"></p>
+          </div>
+        </div>
+      </div>
+    </div>  
+    
+  </div>
+  <!-- JavaScript plugins (requires jQuery) -->
+  <script src="js/jquery-1.10.2.min.js"></script>
+  <!-- Include all compiled plugins (below), or include individual files as needed -->
+  <script src="js/bootstrap.min.js"></script>
+  <!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) 
+  <script src="js/respond.js"></script>
+  -->  
+  <!-- ブックマークお勧めポップアップ追加-->
+  <script src="js/bookmark-bubble/bookmark_bubble.min.js"></script>
+  <script src="js/bookmark-bubble/example/example.min.js"></script>
+  <script src="js/setting.js"></script>
+  <script src="js/script.js"></script>
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-43926409-1', '5374.jp');
+  ga('send', 'pageview');
+  </script>
+  </body>
+</html>
