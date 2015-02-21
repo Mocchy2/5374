@@ -2,26 +2,30 @@
 <html lang="ja">
   <head>
     <meta charset="UTF-8">
-    <meta property="og:title" content="5374.jp坂戸市版" />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="http://nonoichi.5374.jp/" />
-    <meta property="og:description" content="Code for Kanazawaの作った5374.jpの坂戸市版です。5374.jpは貴方の地域で、いつ、どのゴミが回収されるのか、簡単に知る事ができます。" />
-    <meta property="og:image" content="http://nonoichi.5374.jp/OGP.png" width="1200" height="1200" />
-    <title>5374坂戸市版</title> 
+    <title>5374坂戸市(仮)</title>  
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0" />
     <link rel="apple-touch-icon-precomposed" href="apple-touch-icon-precomposed.png" />
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet" media="screen" />
     <link href="css/custom.css" rel="stylesheet" media="screen" />
+
+	<script src="http://maps.google.com/maps/api/js?sensor=true&langage=ja"></script>
+	<style>
+		#map {
+			width: 280px;
+			height: 280px;
+		}
+	</style>
+
   </head>
+  
   <body>
-  <!-- style id="accordion-style" type="text/css"></style -->
+  <style id="accordion-style" type="text/css"></style>
   <div id="accordion"></div>
   <select class="form-control" id="select_area"></select>
-  <button class="form-control" id="select_by_location_data">位置情報から選択</button>
   <div class="accordion" id="accordion3">
-
+    
     <div class="accordion-group-top">
       <div class="accordion-heading">
         <a class="accordion-toggle-top" data-toggle="collapse" data-parent="#accordion3" href="#collapse3_0">5374.jpについて</a>
@@ -72,13 +76,68 @@ Code for Saitama    URL:
 <a href="https://www.facebook.com/groups/186097664924714/" target="_blank"style=" color: #FF0000;text-decoration: underline;">https://www.facebook.com/groups...</a><br>
 立正大学　地球環境科学部　環境システム学科　<br>
 後藤研究室（〒360-0194　熊谷市万吉1700）<a href="https://twitter.com/gotshin" target="_blank"style=" color: #0000FF;text-decoration: underline;">@gotshin</a>
-
-              </p>
-            </div>
+              </div>
           </div>
         </div>
       </div>
     </div>
+    <hr>
+    
+    <div class="accordion-group-top">
+      <div class="accordion-heading">
+        <a class="accordion-toggle-top" data-toggle="collapse" data-parent="#accordion3" href="#collapse3_2">地図表示</a>
+      </div>
+      <div id="collapse3_2" class="accordion-body collapse">
+        <div class="accordion-inner">
+          <div id="help">
+            
+          <h3>地図の表示</h3>
+	<p>住所:<input type="text" id="address" value=""><input type="button" value="表示" onclick="moveMap();"></p>
+	<div id="map"></div>
+	<script>
+		var latlng = new google.maps.LatLng(35.66, 139.69);
+		var options = {
+			zoom: 15,
+			center: latlng,
+			mapTypeId: google.maps.MapTypeId.ROADMAP
+		}
+		var map = new google.maps.Map(document.getElementById('map'), options);
+
+		if(navigator.geolocation){
+			navigator.geolocation.getCurrentPosition(function(position){
+				map.setCenter(new google.maps.LatLng(position.coords.latitude,position.coords.longitude));
+		}, function(){
+				alert('現在地を取得できません！');
+		});
+
+		} else {
+			alert('対応していません！');
+		}
+
+		function moveMap(){
+			var geocoder = new google.maps.Geocoder();
+			geocoder.geocode({
+				'address': document.getElementById('address').value
+			}, function(result, status){
+				if(status == google.maps.GeocoderStatus.OK){
+					map.panTo(result[0].geometry.location);
+					var marker = new google.maps.Marker({
+						position: result[0].geometry.location,
+						map: map
+					});
+				} else {
+					alert("ERROR!");
+				}
+			});
+		}	
+
+	</script>
+            
+          </div>
+        </div>
+      </div>
+    </div>  
+    
   </div>
   <!-- JavaScript plugins (requires jQuery) -->
   <script src="js/jquery-1.10.2.min.js"></script>
@@ -86,13 +145,19 @@ Code for Saitama    URL:
   <script src="js/bootstrap.min.js"></script>
   <!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) 
   <script src="js/respond.js"></script>
-  -->
+  -->  
   <!-- ブックマークお勧めポップアップ追加-->
   <script src="js/bookmark-bubble/bookmark_bubble.min.js"></script>
   <script src="js/bookmark-bubble/example/example.min.js"></script>
   <script src="js/setting.js"></script>
   <script src="js/script.js"></script>
-  <!-- geolib, 地域の判定に利用。ライセンスはLGPL, https://github.com/manuelbieh/Geolib -->
-  <script type="text/javascript" src="http://www.manuel-bieh.de/publikationen/scripts/geolib/geolib.js"></script>
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-43926409-1', '5374.jp');
+  ga('send', 'pageview');
+  </script>
   </body>
 </html>
