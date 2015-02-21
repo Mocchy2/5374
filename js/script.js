@@ -75,87 +75,32 @@ CfKは市民のための組織です。行政や民間企業の影響を受け�
 Code for Saitama    URL:
 <a href="https://www.facebook.com/groups/186097664924714/" target="_blank"style=" color: #FF0000;text-decoration: underline;">https://www.facebook.com/groups...</a><br>
 立正大学　地球環境科学部　環境システム学科　<br>
+>
+    <hr>
 後藤研究室（〒360-0194　熊谷市万吉1700）<a href="https://twitter.com/gotshin" target="_blank"style=" color: #0000FF;text-decoration: underline;">@gotshin</a>
               </div>
           </div>
         </div>
       </div>
-    </div>
-    <hr>
+    </div
     
     <div class="accordion-group-top">
       <div class="accordion-heading">
-        <a class="accordion-toggle-top" data-toggle="collapse" data-parent="#accordion3" href="#collapse3_1">地図表示</a>
+        <a class="accordion-toggle-top" data-toggle="collapse" data-parent="#accordion3" href="#collapse3_1">ゴミ区分の検索</a>
       </div>
       <div id="collapse3_1" class="accordion-body collapse">
         <div class="accordion-inner">
           <div id="help">
-          <h3>地図の表示</h3>
-	<p>住所：<input type="text" id="address" value=""><input type="button" value="表示" onclick="moveMap();"></p>
-	<div id="map"></div>
-	<script>
-		var latlng = new google.maps.LatLng(35.66, 139.69);
-		var options = {
-			zoom: 15,
-			center: latlng,
-			mapTypeId: google.maps.MapTypeId.ROADMAP
-		}
-		var map = new google.maps.Map(document.getElementById('map'), options);
-
-		if(navigator.geolocation){
-			navigator.geolocation.getCurrentPosition(function(position){
-				map.setCenter(new google.maps.LatLng(position.coords.latitude,position.coords.longitude));
-		}, function(){
-				alert('現在地を取得できません！');
-		});
-
-		} else {
-			alert('対応していません！');
-		}
-
-		function moveMap(){
-			var geocoder = new google.maps.Geocoder();
-			geocoder.geocode({
-				'address': document.getElementById('address').value
-			}, function(result, status){
-				if(status == google.maps.GeocoderStatus.OK){
-					map.panTo(result[0].geometry.location);
-					var marker = new google.maps.Marker({
-						position: result[0].geometry.location,
-						map: map
-					});
-				} else {
-					alert("ERROR!");
-				}
-			});
-		}	
-	</script>
-            
-          </div>
-        </div>
-      </div>
-    </div>  
-    <hr>
-    
-    <div class="accordion-group-top">
-      <div class="accordion-heading">
-        <a class="accordion-toggle-top" data-toggle="collapse" data-parent="#accordion3" href="#collapse3_2">ゴミ区分の検索</a>
-      </div>
-      <div id="collapse3_2" class="accordion-body collapse">
-        <div class="accordion-inner">
-          <div id="help"＞
-          <h2>プルダウンメニューで選択</h2>
-          <select id="gominohinmoku">
-          	<option value="sentaku">ゴミの品目を選択してください</option>
+          <h3>下のプルダウンメニューから選択</h3>
+	　<select>
           	<option value="sentaku">アイロン</option>
           	<option value="sentaku">アイロン台</option>
       		<option value="sentaku">ICレコーダー</option>
-          </select>
-	<p>ゴミの品目：<input type="text" id="kubun" value=""><input type="button" value="表示" onclick=";"></p>
+	　</select>
           </div>
         </div>
       </div>
-    </div>  
+    </div> 
     
   </div>
   <!-- JavaScript plugins (requires jQuery) -->
