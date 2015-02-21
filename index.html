@@ -17,6 +17,7 @@
 			height: 280px;
 		}
 	</style>
+
   </head>
   
   <body>
@@ -24,20 +25,20 @@
   <div id="accordion"></div>
   <select class="form-control" id="select_area"></select>
   <div class="accordion" id="accordion3">
-  
-     <div class="accordion-group-top">
+    
+    <div class="accordion-group-top">
       <div class="accordion-heading">
         <a class="accordion-toggle-top" data-toggle="collapse" data-parent="#accordion3" href="#collapse3_0">5374.jpについて</a>
       </div>
       <div id="collapse3_0" class="accordion-body collapse">
         <div class="accordion-inner">
           <div id="help">
-		ゴミの問題は、どの地域でも深刻になりつつあります。
-		Code for Kanazawaでは、先ずは正しいゴミの捨て方に注目しました。
-		目的と使い方は、とてもシンプルです。
-		            <h2>目的</h2>
-		「いつ、どのゴミが収集されているのか？」
-		例えばお引っ越しをされた場合や、新しく坂戸市に住むことになった時、このアプリを使えば、すぐに分かるようにデザインされています。
+ゴミの問題は、どの地域でも深刻になりつつあります。
+Code for Kanazawaでは、先ずは正しいゴミの捨て方に注目しました。
+目的と使い方は、とてもシンプルです。
+            <h2>目的</h2>
+「いつ、どのゴミが収集されているのか？」
+例えばお引っ越しをされた場合や、新しく坂戸市に住むことになった時、このアプリを使えば、すぐに分かるようにデザインされています。
             <h2>使い方</h2>
             <h3>色でゴミのジャンルを表示</h3>
             <p>一番近いゴミの日とジャンルを上から順に表示しています。</p>
@@ -55,12 +56,12 @@
             <div id="cfk">
               <h3>Code for Kanazawaについて</h3>
               <p>コードで、世界をHappyに。<br />
-		各地域には様々な課題があり、解決するためのコミュニティ（団体）も数多くあります。<br />
-		課題の中には、ITやデザインの力で解決できるものも多くありますが、全てのコミュニティにそのスキル（技術）が備わっているわけではありません。<br /><br />
-		Code for Kanazawa（CfK）は、市民の課題を集め、その課題を整理・分析した上で、メンバーが実際に課題解決となるソフトウェアやハードウェア（仕組みや方法）を開発します。<br />
-		私たちは、デザインをして、ソフトウェアコードを書き、課題を解決するサービスを完成させるのです。さらに、そのサービスを提供し続ける力も持ちます。<br /><br />
-		CfKは市民のための組織です。行政や民間企業の影響を受けずに中立・公益の立場から物事を判断するよう心がけています。<br /><br />
-		公式サイト<br />
+各地域には様々な課題があり、解決するためのコミュニティ（団体）も数多くあります。<br />
+課題の中には、ITやデザインの力で解決できるものも多くありますが、全てのコミュニティにそのスキル（技術）が備わっているわけではありません。<br /><br />
+Code for Kanazawa（CfK）は、市民の課題を集め、その課題を整理・分析した上で、メンバーが実際に課題解決となるソフトウェアやハードウェア（仕組みや方法）を開発します。<br />
+私たちは、デザインをして、ソフトウェアコードを書き、課題を解決するサービスを完成させるのです。さらに、そのサービスを提供し続ける力も持ちます。<br /><br />
+CfKは市民のための組織です。行政や民間企業の影響を受けずに中立・公益の立場から物事を判断するよう心がけています。<br /><br />
+公式サイト<br />
 <a href="http://www.codeforkanazawa.org/" style=" color: #FF0000;text-decoration: underline;">http://www.codeforkanazawa.org/</a>
 <br>5374.jp<br />
 <a href="http://5374.jp/index.html" target="_blank"style=" color: #FF0000;text-decoration: underline;">http://5374.jp/index.html</a></p>
@@ -81,76 +82,20 @@ Code for Saitama    URL:
       </div>
     </div>
     <hr>
-
-     <div class="accordion-group-top">
-      <div class="accordion-heading">
-        <a class="accordion-toggle-top" data-toggle="collapse" data-parent="#accordion3" href="#collapse3_1">地図表示</a>
-      </div>
-      <div id="collapse3_1" class="accordion-body collapse">
-        <div class="accordion-inner">
-          <div id="help">
-            
-          <h3>地図の表示</h3>
-	<p>住所:<input type="text" id="address" value=""><input type="button" value="表示" onclick="moveMap();"></p>
-	<div id="map"></div>
-	<script>
-		var latlng = new google.maps.LatLng(35.66, 139.69);
-		var options = {
-			zoom: 15,
-			center: latlng,
-			mapTypeId: google.maps.MapTypeId.ROADMAP
-		}
-		var map = new google.maps.Map(document.getElementById('map'), options);
-
-		if(navigator.geolocation){
-			navigator.geolocation.getCurrentPosition(function(position){
-				map.setCenter(new google.maps.LatLng(position.coords.latitude,position.coords.longitude));
-		}, function(){
-				alert('現在地を取得できません！');
-		});
-
-		} else {
-			alert('対応していません！');
-		}
-
-		function moveMap(){
-			var geocoder = new google.maps.Geocoder();
-			geocoder.geocode({
-				'address': document.getElementById('address').value
-			}, function(result, status){
-				if(status == google.maps.GeocoderStatus.OK){
-					map.panTo(result[0].geometry.location);
-					var marker = new google.maps.Marker({
-						position: result[0].geometry.location,
-						map: map
-					});
-				} else {
-					alert("ERROR!");
-				}
-			});
-		}	
-
-	</script>
-            
-          </div>
-        </div>
-      </div>
-    </div>
-    <hr>
     
     <div class="accordion-group-top">
       <div class="accordion-heading">
-        <a class="accordion-toggle-top" data-toggle="collapse" data-parent="#accordion3" href="#collapse3_2">ゴミ区分の検索</a>
+        <a class="accordion-toggle-top" data-toggle="collapse" data-parent="#accordion3" href="#collapse3_1">ゴミ区分の検索</a>
       </div>
-      <div id="collapse3_2" class="accordion-body collapse">
+      <div id="collapse3_1" class="accordion-body collapse">
         <div class="accordion-inner">
-          <div id="help">
-		プルダウンメニューの設置
+          <div id="help"＞
+          <h2>プルダウンメニューの表示</h2>
+            
           </div>
         </div>
       </div>
-    </div>
-    <hr>
+    </div>  
     
   </div>
   <!-- JavaScript plugins (requires jQuery) -->
