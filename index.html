@@ -2,30 +2,19 @@
 <html lang="ja">
   <head>
     <meta charset="UTF-8">
-    <title>5374坂戸市(仮)</title>  
+    <title>5374(ｺﾞﾐﾅｼ).jp</title> 
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0" />
-    <link rel="apple-touch-icon-precomposed" href="apple-touch-icon-precomposed.png" />
+    <link rel="apple-touch-icon-precomposed" href="img/apple-touch-icon-precomposed.png" />
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet" media="screen" />
     <link href="css/custom.css" rel="stylesheet" media="screen" />
-
-	<script src="http://maps.google.com/maps/api/js?sensor=true&langage=ja"></script>
-	<style>
-		#map {
-			width: 280px;
-			height: 280px;
-		}
-	</style>
-
   </head>
-  
   <body>
   <style id="accordion-style" type="text/css"></style>
   <div id="accordion"></div>
   <select class="form-control" id="select_area"></select>
   <div class="accordion" id="accordion3">
-    
     <div class="accordion-group-top">
       <div class="accordion-heading">
         <a class="accordion-toggle-top" data-toggle="collapse" data-parent="#accordion3" href="#collapse3_0">5374.jpについて</a>
@@ -38,7 +27,7 @@ Code for Kanazawaでは、先ずは正しいゴミの捨て方に注目しまし
 目的と使い方は、とてもシンプルです。
             <h2>目的</h2>
 「いつ、どのゴミが収集されているのか？」
-例えばお引っ越しをされた場合や、新しく坂戸市に住むことになった時、このアプリを使えば、すぐに分かるようにデザインされています。
+例えばお引っ越しをされた場合や、新しく金沢市に住むことになった時、このアプリを使えば、すぐに分かるようにデザインされています。
             <h2>使い方</h2>
             <h3>色でゴミのジャンルを表示</h3>
             <p>一番近いゴミの日とジャンルを上から順に表示しています。</p>
@@ -48,8 +37,7 @@ Code for Kanazawaでは、先ずは正しいゴミの捨て方に注目しまし
             <p>お住まいの地域を選択することで、ゴミ収集日が自動的に更新されます。</p>
             <div id="caption">
               <h4>提供されるゴミ情報について</h4>
-              <p>坂戸市が公開しているデータから立正大学地球環境科学部環境システム学科後藤研究室が独自に解析し、アプリに実装しました。</p>
-             
+              <p>金沢市が公開しているデータからCfKが独自に解析し、アプリに実装しました。</p>
               <h4>ライセンスについて</h4>
               <p>本アプリの著作権はCode for Kanazawaに帰属します。</p>
             </div>
@@ -62,306 +50,13 @@ Code for Kanazawa（CfK）は、市民の課題を集め、その課題を整理
 私たちは、デザインをして、ソフトウェアコードを書き、課題を解決するサービスを完成させるのです。さらに、そのサービスを提供し続ける力も持ちます。<br /><br />
 CfKは市民のための組織です。行政や民間企業の影響を受けずに中立・公益の立場から物事を判断するよう心がけています。<br /><br />
 公式サイト<br />
-<a href="http://www.codeforkanazawa.org/" style=" color: #FF0000;text-decoration: underline;">http://www.codeforkanazawa.org/</a>
-<br>5374.jp<br />
-<a href="http://5374.jp/index.html" target="_blank"style=" color: #FF0000;text-decoration: underline;">http://5374.jp/index.html</a></p>
+<a href="http://www.codeforkanazawa.org/">http://www.codeforkanazawa.org/</a>
+              </p>
             </div>
-            <div style="border:solid 1px #0fff00;"></div><br>
-              <div id="ris">
-5374.jp 坂戸市版は立正大学地球環境科学部環境システム学科後藤研究室とCode for Saitamaにより制作されました。<br><br>
-今後スマートフォンのGPSから位置情報を取得する機能を追加する予定です。<br>
-間違い・ご要望等ございましたら、下記よりご連絡くださいますようお願い致します。<br>
-<br>
-Code for Saitama    URL:
-<a href="https://www.facebook.com/groups/186097664924714/" target="_blank"style=" color: #FF0000;text-decoration: underline;">https://www.facebook.com/groups...</a><br>
-立正大学　地球環境科学部　環境システム学科　<br>
-後藤研究室（〒360-0194　熊谷市万吉1700）<a href="https://twitter.com/gotshin" target="_blank"style=" color: #0000FF;text-decoration: underline;">@gotshin</a>
-              </div>
           </div>
         </div>
       </div>
     </div>
-    <hr>
-    
-    <div class="accordion-group-top">
-      <div class="accordion-heading">
-        <a class="accordion-toggle-top" data-toggle="collapse" data-parent="#accordion3" href="#collapse3_1">地図表示</a>
-      </div>
-      <div id="collapse3_1" class="accordion-body collapse">
-        <div class="accordion-inner">
-          <div id="help">
-          <h3>地図の表示</h3>
-	<p>住所：<input type="text" id="address" value=""><input type="button" value="表示" onclick="moveMap();"></p>
-	<div id="map"></div>
-	<script>
-		var latlng = new google.maps.LatLng(35.66, 139.69);
-		var options = {
-			zoom: 15,
-			center: latlng,
-			mapTypeId: google.maps.MapTypeId.ROADMAP
-		}
-		var map = new google.maps.Map(document.getElementById('map'), options);
-
-		if(navigator.geolocation){
-			navigator.geolocation.getCurrentPosition(function(position){
-				map.setCenter(new google.maps.LatLng(position.coords.latitude,position.coords.longitude));
-		}, function(){
-				alert('現在地を取得できません！');
-		});
-
-		} else {
-			alert('対応していません！');
-		}
-
-		function moveMap(){
-			var geocoder = new google.maps.Geocoder();
-			geocoder.geocode({
-				'address': document.getElementById('address').value
-			}, function(result, status){
-				if(status == google.maps.GeocoderStatus.OK){
-					map.panTo(result[0].geometry.location);
-					var marker = new google.maps.Marker({
-						position: result[0].geometry.location,
-						map: map
-					});
-				} else {
-					alert("ERROR!");
-				}
-			});
-		}	
-	</script>
-            
-          </div>
-        </div>
-      </div>
-    </div>  
-    <hr>
-    
-    <div class="accordion-group-top">
-      <div class="accordion-heading">
-        <a class="accordion-toggle-top" data-toggle="collapse" data-parent="#accordion3" href="#collapse3_2">ゴミ区分の検索</a>
-      </div>
-      <div id="collapse3_2" class="accordion-body collapse">
-        <div class="accordion-inner">
-          <div id="help"＞
-          <h2>プルダウンメニューで選択</h2>
-          <select id="gominohinmoku">
-          	<option value="sentaku">ゴミの品目を選択してください</option>
-          	<option value="sentaku">アイロン</option>
-          	<option value="sentaku">アイロン台</option>
-      		<option value="sentaku">ICレコーダー</option>
-      		<option value="sentaku">ICレコーダー</option>
-       		<option value="sentaku">IHクッキングヒーター</option>
-      		<option value="sentaku"> アコーディオンカーテン </option>
-      		<option value="sentaku"> アタッシュケース </option>
-      		<option value="sentaku"> 足ふきマット </option>
-       		<option value="sentaku">  雨戸  </option>
-      		<option value="sentaku">  編み機  </option>
-      		<option value="sentaku">  網戸  </option>
-      		<option value="sentaku">  網戸の網  </option>
-      		<option value="sentaku"> アルバム</option>
-      		<option value="sentaku">アルミコーティング袋（菓子・食品）</option>
-      		<option value="sentaku">アルミホイル（アルミ箔）</option>
-      		<option value="sentaku"> アルミホイルの芯 </option>
-     		<option value="sentaku"> アルミホイルの外箱 </option>
-     		<option value="sentaku"> アルミホイルの外箱の刃（金属） </option>
-     		<option value="sentaku"> 安全かみそり </option>
-     		<option value="sentaku"> アンテナ（テレビ・パラボラ） </option>
-     		<option value="sentaku"> アンプ </option>
-     		<option value="sentaku"> 衣装ケース </option>
-     		<option value="sentaku"> 衣装ケース </option>
-     		<option value="sentaku"> 衣装ケース（枠のみ） </option>
-     		<option value="sentaku">いす（木製・金属製共）</option>
-     		<option value="sentaku">一輪車（乗物用）</option>
-     		<option value="sentaku">一輪車（運搬用）</option>
-     		<option value="sentaku"> ETC車載ユニット </option>
-     		<option value="sentaku"> ETC車載ユニット </option>
-     		<option value="sentaku"> 一斗缶(指定袋未利用可) </option>
-     		<option value="sentaku"> 犬小屋（小） </option>
-     		<option value="sentaku"> 犬小屋（大） </option>
-     		<option value="sentaku"> 医薬品 </option>
-     		<option value="sentaku"> 衣類 </option>
-     		<option value="sentaku"> 衣類乾燥機 </option>
-     		<option value="sentaku"> インクカートリッジ（パソコン） </option>
-     		<option value="sentaku"> インクリボン（ワープロ） </option>
-     		<option value="sentaku"> インスタント食品のアルミ容器 </option>
-     		<option value="sentaku"> ウインドサーフィンボード </option>
-     		<option value="sentaku">ウインドファン粗大ごみ</option>
-     		<option value="sentaku"> 植木の支柱 </option>
-     		<option value="sentaku">植木鉢（素焼き、プラスチック製）</option>
-     		<option value="sentaku">浮き輪</option>
-     		<option value="sentaku"> ウッドカーペット </option>
-     		<option value="sentaku"> ウッドカーペット </option>
-     		<option value="sentaku">上敷</option>
-     		<option value="sentaku"> 上履き（学校用） </option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-     		<option value="sentaku"></option>
-
-        </select>
-	<script>
-		
-		
-	</script>
-          </div>
-        </div>
-      </div>
-    </div>  
-    
   </div>
   <!-- JavaScript plugins (requires jQuery) -->
   <script src="js/jquery-1.10.2.min.js"></script>
