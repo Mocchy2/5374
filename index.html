@@ -108,9 +108,16 @@ Code for Saitama    URL:
             <option value="4">枝葉類</option>
             <option value="5">鉛筆</option>
           </select>
+          <br>
+          <button>CHECK</button>
+          
           <script>
-            var hinmokuValue = $(#hinmoku).val(0);
-            document.write(hinmokuVaule);
+            $(function() {
+              $("button").click(function() {
+                var myValue = $("select").val();
+                alert(myValue);
+              })
+            });
           </script>
 
           </div>
