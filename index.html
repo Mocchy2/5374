@@ -103,8 +103,8 @@ Code for Saitama    URL:
           <select id = "hinmoku">
             <option value="0" selected>ごみの品目を選択してください</option>            
             <option value="1">足ふきマット</option>
-            <option value="1">アルバム</option>
-            <option value="1">インクリボン（ワープロ）</option>
+            <option value="2">アルバム</option>
+            <option value="3">インクリボン（ワープロ）</option>
             <option value="4">枝葉類</option>
             <option value="5">鉛筆</option>
           </select>
@@ -114,7 +114,7 @@ Code for Saitama    URL:
           <script>
             $(function() {
               $("button").click(function() {
-                var myValue = $("select").val();
+                var myValue = $("#hinmoku").val();
                 alert(myValue);
               })
             });
