@@ -100,7 +100,7 @@ Code for Saitama    URL:
         <div class="accordion-inner">
           <div id="help">
           <p>ごみの品目</p>
-          <select>
+          <select name = "hinmoku">
             <option value="0" selected>ごみの品目を選択してください</option>            
             <option value="1">足ふきマット</option>
             <option value="1">アルバム</option>
@@ -134,6 +134,10 @@ Code for Saitama    URL:
             <option value="30"></option>
 
           </select>
+          <script>
+            a = document.hinmoku.options[2].text;
+            alert(a);
+          </script>
           
           </div>
         </div>
