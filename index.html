@@ -100,44 +100,22 @@ Code for Saitama    URL:
         <div class="accordion-inner">
           <div id="help">
           <p>ごみの品目</p>
-          <select name = "hinmoku">
+          <select id = "hinmoku">
             <option value="0" selected>ごみの品目を選択してください</option>            
             <option value="1">足ふきマット</option>
             <option value="1">アルバム</option>
             <option value="1">インクリボン（ワープロ）</option>
             <option value="4">枝葉類</option>
             <option value="5">鉛筆</option>
-            <option value="6"></option>
-            <option value="7"></option>
-            <option value="8"></option>
-            <option value="9"></option>
-            <option value="10"></option>
-            <option value="11"></option>
-            <option value="12"></option>
-            <option value="13"></option>
-            <option value="14"></option>
-            <option value="15"></option>
-            <option value="16"></option>
-            <option value="17"></option>
-            <option value="18"></option>
-            <option value="19"></option>
-            <option value="20"></option>
-            <option value="21"></option>
-            <option value="22"></option>
-            <option value="23"></option>
-            <option value="24"></option>
-            <option value="25"></option>
-            <option value="26"></option>
-            <option value="27"></option>
-            <option value="28"></option>
-            <option value="29"></option>
-            <option value="30"></option>
-
           </select>
           <script>
-            a = document.hinmoku.options[2].text;
-            alert(a);
+            $(document).ready(function(){
+              function displayVals() {
+                var hinmokuVaules = $("#hinmoku").val();
+                $("p").html(hinmokuVaules);
+              }
           </script>
+          <p></p>
           
           </div>
         </div>
