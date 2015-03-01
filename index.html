@@ -9,6 +9,8 @@
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet" media="screen" />
     <link href="css/custom.css" rel="stylesheet" media="screen" />
+    
+    .hinmoku {max-width: 100%}
   </head>
   
   <body>
@@ -83,7 +85,7 @@ Code for Saitama    URL:
         <div class="accordion-inner">
           <div id="help">
           <p>ごみの品目</p>
-          <select id = "hinmoku">
+          <select class = "hinmoku">
             <option value="" selected>ごみの品目を選択してください</option>            
             <option value="燃やさないごみ">アイロン</option>
             <option value="燃やさないごみ">アイロン台</option>
@@ -396,13 +398,13 @@ Code for Saitama    URL:
             <option value=""></option>
 
           </select>
-          <br>
+          <br><br>
           <button>CHECK</button>
         　<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
           <script>
             $(function() {
               $("button").click(function() {
-                var myValue = $("#hinmoku").val();
+                var myValue = $(".hinmoku").val();
                 alert(myValue + "です");
               })
             });
