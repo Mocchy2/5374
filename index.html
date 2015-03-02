@@ -714,7 +714,7 @@ Code for Saitama    URL:
           <script>
             $(function() {
               $("button").click(function() {
-                var myValue = $(".hinmoku").val();
+                var myValue = $(".hinmoku option:seleced").text();
                 document.write(myValue + "です");
               })
             });
