@@ -967,15 +967,16 @@ Code for Saitama    URL:
           </select>
           <br><br>
           <button>CHECK</button>
-          <p></p>
           <br><br>
+          <div id = hinmoku2></div>
+          
         　<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
           <script>
             $(function() {
               $("button").click(function() {
-                var myValue = $('#hinmoku option:selected').text();
-                document.write(myValue + "です");
-              })
+                var myValue = $('#hinmoku option:selected').val();
+                $("#hinmoku2").text(myValue);
+              });
             });
           </script>
 
