@@ -11,7 +11,7 @@
     <link href="css/custom.css" rel="stylesheet" media="screen" />
     
     <style type = "text/css">
-      .hinmoku {max-width: 100%}
+      #hinmoku {max-width: 100%}
     </style>
   </head>
   
@@ -87,7 +87,7 @@ Code for Saitama    URL:
         <div class="accordion-inner">
           <div id="help">
           <p>ごみの品目</p>
-          <select class = "hinmoku">
+          <select id = "hinmoku">
             <option value="" selected>ごみの品目を選択してください</option>            
             <option value="燃やさないごみ">アイロン</option>
             <option value="燃やさないごみ">アイロン台</option>
@@ -973,7 +973,7 @@ Code for Saitama    URL:
           <script>
             $(function() {
               $("button").click(function() {
-                var myValue = $(".hinmoku").val();
+                var myValue = $("#hinmoku").val();
                 document.write(myValue + "です");
               })
             });
