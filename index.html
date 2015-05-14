@@ -45,7 +45,7 @@
 		var mymap = new google.maps.Map(document.getElementById('map'), options); //地図を作製する
 
 		/*現在地を取得する*/
-		function getPostion() {
+		function getPosition() {
 			if(navigator.geolocation){ //navigator（ブラウザのこと）がgeolocationに対応していた場合
 			    navigator.geolocation.getCurrentPosition(function (position) { //現在地の取得
 			        mymap.setCenter(new google.maps.LatLng(position.coords.latitude, position.coords.longitude)); //取得した緯度経度をもとにマップを移動させる
