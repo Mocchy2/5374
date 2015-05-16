@@ -186,7 +186,7 @@
 			            		} else if(address.match(/坂戸市四日市場/)) {
 			            			 document.getElementById("judge").innerHTML = "お使いの地域は「四日市場」です。";		            			 
 			            		} else {
-			            			alert("坂戸市外です。");
+			            			alert("範囲外です。");
 			            		}
 	
 			            } else {
@@ -205,7 +205,7 @@
 	</script>
 	<br>
 	<div style="text-align: center">
-		<input type="button" onclick="getPosition()" value="現在地の取得">
+		<input type="button" value="現在地の取得" onclick="getPosition()">
 	</div>
    	<div id="judge"></div> <!--坂戸市なのか判定する領域-->
     
@@ -1139,7 +1139,7 @@ Code for Saitama    URL:
           <br>
           <button>調べる</button>
           <br><br>
-          <div>上記のごみ品目のごみ分類は<dub id = hinmoku2></div>です</div>
+          <div>上記のごみ品目のごみ分類は<div id = hinmoku2></div>です</div>
           
         　<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
           <script>
