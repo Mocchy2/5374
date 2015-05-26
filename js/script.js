@@ -369,7 +369,6 @@ $(function() {
       }
 
       csvToArray("data/center.csv", function(tmp) {
-      	alert(typeof(tmp));
         //ゴミ処理センターのデータを解析します。
         //表示上は現れませんが、
         //金沢などの各処理センターの休止期間分は一週間ずらすという法則性のため
