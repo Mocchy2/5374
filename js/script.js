@@ -346,7 +346,7 @@ $(function() {
         ret.push(row);
       }
       cb(ret);
-      alert(typeof(ret));
+      alert(typeof(cb));
     });
   }
 
