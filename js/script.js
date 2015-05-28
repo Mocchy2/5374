@@ -346,8 +346,7 @@ $(function() {
         ret.push(row);
       }
       cb(ret);
-      alert(cb);
-      console.log(cb);
+
     });
   }
 
@@ -414,6 +413,8 @@ $(function() {
   function createMenuList(after_action) {
     // 備考データを読み込む
     csvToArray("data/remarks.csv", function(data) {
+    	      alert(data);
+      console.log(data);
       data.shift();
       for (var i in data) {
         remarks.push(new RemarkModel(data[i]));
