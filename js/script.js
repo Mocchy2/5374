@@ -346,7 +346,8 @@ $(function() {
         ret.push(row);
       }
       cb(ret);
-
+      alert(ret);
+      console.log(ret);
     });
   }
 
@@ -416,8 +417,6 @@ $(function() {
       data.shift();
       for (var i in data) {
         remarks.push(new RemarkModel(data[i]));
-      alert(data);
-      console.log(data);
       }
     });
     csvToArray("data/description.csv", function(data) {
