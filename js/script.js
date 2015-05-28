@@ -413,11 +413,11 @@ $(function() {
   function createMenuList(after_action) {
     // 備考データを読み込む
     csvToArray("data/remarks.csv", function(data) {
-      alert(data);
-      console.log(data);
       data.shift();
       for (var i in data) {
         remarks.push(new RemarkModel(data[i]));
+      alert(data[i]);
+      console.log(data[i]);
       }
     });
     csvToArray("data/description.csv", function(data) {
