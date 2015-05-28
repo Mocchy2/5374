@@ -345,7 +345,7 @@ $(function() {
         var row = line[i].split(",");
         ret.push(row);
       }
-      cb(ret);
+//      cb(ret);
     });
   }
 
