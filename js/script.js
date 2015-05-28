@@ -346,8 +346,8 @@ $(function() {
         ret.push(row);
       }
       cb(ret);
-      alert(ret);
-      console.log(ret);
+      alert(cb);
+      console.log(cb);
     });
   }
 
