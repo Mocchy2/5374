@@ -441,8 +441,8 @@ $(function() {
         $("#accordion2").show();
 
       });
-      alert(data);
-      console.log(data);
+      alert(row);
+      console.log(row);
     });
 
   }
