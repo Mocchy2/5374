@@ -347,7 +347,7 @@ $(function() {
       }
       cb(ret);
       var a = typeof(ret);
-      alert(filename);
+      alert(cb);
     });
   }
 
