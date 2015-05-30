@@ -416,7 +416,7 @@ $(function() {
       data.shift();
       for (var i in data) {
         remarks.push(new RemarkModel(data[i]));
-        console.log(remarks);
+        console.log(data);
       }
     });
     csvToArray("data/description.csv", function(data) {
