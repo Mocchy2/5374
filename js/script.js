@@ -549,12 +549,12 @@ $(function() {
     var accordion_elm = $("#accordion");
     accordion_elm.html(accordionHTML);
 
-    $('html,body').animate({scrollTop: 0}, 'fast');
+    $('html,body').animate({scrollTop: 10}, 'fast');
 
     //アコーディオンのラベル部分をクリックしたら
     $(".accordion-body").on("shown.bs.collapse", function() {
       var body = $('body');
-      var accordion_offset = $($(this).parent().get(50)).offset().top;
+      var accordion_offset = $($(this).parent().get(0)).offset().top;
       body.animate({
         scrollTop: accordion_offset
       }, 3000);
