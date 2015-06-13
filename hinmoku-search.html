@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>ごみの種類を調べる</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+
+<body>
+	<label>ごみの種類を検索: <input id="tablesearchinput" type="text" /></label>
+	<table id="tabledata">
+		<thead>
+			<tr>
+				<th class="label">ラベル</th>
+				<th class="name">名前</th>
+				<th class="notice">注意事項</th>
+				<th class="furigana">ふりがな</th>
+			</tr>
+		</thead>
+		<tbody id="gomi"></tbody>
+	</table>
+
+	<script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+	<script src="jquery.searcher.js"></script>
+	<script>
+	$(function() {
+		//テキストデータの読込
+		$.get("target.csv", function(csvData) {
+			csvData = csvData.replace("/\r/gm", "");
+			var line = csvData.split("\n"),
+				ret1 = [],
+				ret2 = [],
+				ret3 = [],
+				ret4 = [],
+				t = "";
+
+			for (var i=1; i<line.length; i++) {
+				if(line[i].length == 0) continue;
+
+				var row1 = line[i].split(",")[0];
+				var row2 = line[i].split(",")[1];
+				var row3 = line[i].split(",")[2];
+				var row4 = line[i].split(",")[3];
+				ret1.push(row1);
+				ret2.push(row2);
+				ret3.push(row3);
+				ret4.push(row4);
+			}
+
+
+			for (var j in ret1) {
+				t += "<tr><td>"+ret1[j]+"</td><td>"+ret2[j]+"</td><td>"+ret3[j]+"</td><td>"+ret4[j]+"</td></tr>";
+			}
+
+			$("#gomi").html(t);
+
+			$("#tabledata").searcher({
+				inputSelector: "#tablesearchinput"
+			});
+
+		});
+
+	});
+
+	</script>
+</body>
+</html>
