@@ -1,5 +1,5 @@
 label,sublabel,description,styles,bgcolor
-燃やせるごみ,,,,#ea3b13
+燃やせるごみ,,,img/moerugomi.svg,#ea3b13
 燃やさないごみ,,,,#708090
 資源プラスチック,,,,#77ae1f
 資源カン,,,,#2dc6aa
