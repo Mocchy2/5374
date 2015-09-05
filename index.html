@@ -18,14 +18,43 @@
       }
       
       #footer {
-      	color: gray;
-      	font-size: x-small;
- 	position: absolute;
- 	bottom: 0%;
- 	width: 100%;
- 	text-align: center;
+        color: gray;
+        font-size: x-small;
+        position: absolute;
+       	bottom: 0%;
+       	width: 100%;
+       	text-align: center;
       }
+      
+      #genzaichibutton {
+         margin: 0 auto;
+        width: 200px;
+        padding: 5px;
+        border-radius: 5px;
+        background: #ff0000;
+        box-shadow: 0 4px 0 #0088cc;
+        cursor: pointer;
+      }
+    	#btn:genzaichibutton {
+    		opacity: 0.8;
+    	}
+	#btn.genzaichibutton {
+		margin-top: 32px;
+		box-shadow: 0 2px 0 #0088cc;
+	}
     </style>
+    <script>
+    (function() {
+			"use strict";
+			
+			document.getElementById('btn').addEventListener('mousedown', function() {
+				this.className = 'pushed';
+			});
+			document.getElementById('btn').addEventListener('mouseup', function() {
+				this.className = '';
+			});
+		})();
+    </script>
   </head>
   
   <body>
@@ -36,7 +65,7 @@
   
   <br/>
   <div style="text-align: center">  
-    <input type="button" value="現在地を調べる" onclick="getPosition()">
+    <input type="button" value="現在地を調べる" id="genzaichibutton" onclick="getPosition()">
   </div>
   <div id="map"></div> <!--地図を表示する領域-->
   <div id="judge"></div> <!--坂戸市なのか判定する領域-->
