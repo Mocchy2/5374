@@ -24,7 +24,7 @@ function getPosition() {
         if (status == google.maps.GeocoderStatus.OK) { //正しく住所から緯度経度などの情報を取得
 
           var address = result[0].formatted_address.replace(/^日本, 〒[0-9]{3}-[0-9]{4}/, "");
-          document.getElementById("jusyo").innerHTML = address + "にいます。";
+          document.getElementsByClassName("jusyo").innerHTML = address + "にいます。";
 
           if(address.match(/坂戸市青木/)) {
             document.getElementById("judge").innerHTML = "お使いの地域は「青木」です。";
