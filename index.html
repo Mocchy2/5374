@@ -18,7 +18,7 @@
       #hinmoku {max-width: 100%}
       #hinmoku2 {color: red; font-size: x-large;}
       
-      .btn {
+      #btn {
         width: 200px; /* 幅 */
         padding: 5px; /* 領域内のスペース */
         border-radius: 5px; /* 角の丸み具合 */
@@ -27,10 +27,10 @@
         cursor: pointer; /* マウスオーバーしたときのカーソルの形 */
       }
 
-      .btn:hover { opacity: 0.8; } /* カーソルが乗っているときの動作 */
+      #btn:hover { opacity: 0.8; } /* カーソルが乗っているときの動作 */
       
-      .btn.pushed {
-        box-shadow: 0 10px 0 #eeeeee; /* 影の色 */
+      #btn.pushed {
+        box-shadow: 2px 2px 0 #aaaaaa; /* 影の色 */
       }
 
     </style>
@@ -210,10 +210,10 @@
     (function() {
       "use strict";
 
-      document.getElementsByClassName('btn').addEventListener('mousedown', function() {
+      document.getElementById('btn').addEventListener('mousedown', function() {
         this.className = 'pushed';
       });
-      document.getElementsByClassName('btn').addEventListener('mouseup', function() {
+      document.getElementById('btn').addEventListener('mouseup', function() {
         this.className = '';
       });
     })();
