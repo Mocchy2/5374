@@ -2,7 +2,7 @@
 <html lang="ja">
   <head>
     <meta charset="UTF-8">
-    <title>5374坂戸市版</title>  
+    <title>5374坂戸市（仮）</title>  
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0" />
     <link rel="apple-touch-icon-precomposed" href="img/apple-touch-icon-precomposed.png" />
@@ -16,7 +16,22 @@
     	 max-height: none; /*マップの高さ*/
       }
       #hinmoku {max-width: 100%}
-      #hinmoku2 { color: red; font-size: x-large;}
+      #hinmoku2 {color: red; font-size: x-large;}
+      
+      .btn {
+        margin: 0 auto; /* 中央揃え */
+        width: 200px;
+        padding: 5px; 
+        border-radius: 5px; /* 角の丸み具合 */
+        background: #00aaff; /* ボタンの色 */
+        box-shadow: 0 4px 0 #0088cc; /* 影の色 */
+        cursor: pointer; /* マウスオーバーしたときのカーソルの形 */
+      }
+      .btn:hover { opacity: 0.8; } /* カーソルが乗っているときの動作 */
+      .btn.pushed {
+        margin-top: 32px;
+        box-shadow: 0 2px 0 #0088cc; /* 影の色 */
+      }
     </style>
   </head>
   
@@ -26,8 +41,8 @@
     <select class="form-control" id="select_area"></select>
   
     <br/>
-    <div style="text-align: center">  
-      <input type="button" value="現在地を調べる" onclick="getPosition()">
+    <div class="btn">  
+      <input value="現在地を調べる" onclick="getPosition()">
     </div>
     
     <div id="judge"></div> <!--地域を判定する領域-->
@@ -145,8 +160,10 @@
               
             <p>リンク</p> 
             <p><a href="http://www.city.sakado.lg.jp/23,0,207,764.html" target="_blank" style="color: blue; text-decoration: underline;">坂戸市　ごみ、分別収集</a></p>
+            <p><a href="http://www.city.sakado.lg.jp/23,0,207,764.html" target="_blank" style="color: blue; text-decoration: underline;">坂戸市　ごみ、分別収集</a></p>
             <p><a href="http://sakado-city.github.io/hinmoku-search/" target="_blank" style="color: blue; text-decoration: underline;">ごみの種類を絞り込んで検索する</a></p>
-            
+            <p><a href="http://sakado-city.github.io/hinmoku-search/" target="_blank" style="color: blue; text-decoration: underline;">ごみの種類を絞り込んで検索する</a></p>
+
             </div>
           </div>
         </div>
@@ -172,7 +189,7 @@
   --> 
   <!--Google Maps APIの呼び出し--> 
   <script src="http://maps.google.com/maps/api/js?sensor=true&langage=ja"></script> 
-  
+
   <!-- ブックマークお勧めポップアップ追加-->
   <script src="js/bookmark-bubble/bookmark_bubble.min.js"></script>
   <script src="js/bookmark-bubble/example/example.min.js"></script>
@@ -187,6 +204,17 @@
   })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
   ga('create', 'UA-43926409-1', '5374.jp');
   ga('send', 'pageview');
+  </script>
+  <script>
+    (function() {
+      "use strict";
+      document.getElemntById('btn').addEventListener('mousedown', function() {
+        this.className = 'pushed';
+      });
+      document.getElemntById('btn').addEventListener('mouseup', function() {
+        this.className = '';
+      });
+    })();
   </script>
   </body>
 </html>
