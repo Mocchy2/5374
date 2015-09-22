@@ -209,10 +209,13 @@
   <script>
     (function() {
       "use strict";
-      document.getElemntById('btn').addEventListener('mousedown', function() {
+      document.getElementsByClassName('btn').addEventListener('click', function() {
+        
+      });
+      document.getElementsByClassName('btn').addEventListener('mousedown', function() {
         this.className = 'pushed';
       });
-      document.getElemntById('btn').addEventListener('mouseup', function() {
+      document.getElementsByClassName('btn').addEventListener('mouseup', function() {
         this.className = '';
       });
     })();
