@@ -15,10 +15,16 @@
     	 max-width: 100%; /*マップの幅*/
     	 max-height: none; /*マップの高さ*/
       }
+      #judge {
+        color: red;
+      }
+      .jusyo {
+        color: green;
+      }
       #hinmoku {max-width: 100%}
       #hinmoku2 {color: red; font-size: x-large;}
       
-      #btn {
+      .btn {
         width: 200px; /* 幅 */
         padding: 5px; /* 領域内のスペース */
         border-radius: 5px; /* 角の丸み具合 */
@@ -27,9 +33,9 @@
         cursor: pointer; /* マウスオーバーしたときのカーソルの形 */
       }
 
-      #btn:hover { opacity: 0.8; } /* カーソルが乗っているときの動作 */
+      .btn:hover { opacity: 0.8; } /* カーソルが乗っているときの動作 */
       
-      #btn.pushed {
+      .btn.pushed {
         box-shadow: 5px 3px 0 #000000; /* 影の色 */
       }
 
@@ -43,11 +49,11 @@
   
     <br/>
     <div style="text-align: center">
-     <input type="button" value="現在地を調べる" onclick="getPosition()" id="btn">
+     <p><input type="button" value="現在地を調べる" onclick="getPosition()" class="btn"></p>
+     <div id="judge"></div> <!--地域を判定する領域-->     
+     <p>現在の場所は<div class="jusyo"></div>です</p>
     </div>
     
-    <div id="judge"></div> <!--地域を判定する領域-->
-  
     <div class="accordion" id="accordion3">
       <div class="accordion-group-top">
         <div class="accordion-heading">
@@ -140,7 +146,7 @@
             <div id="help">
               
             <div id="map"></div> <!--地図を表示する領域-->  
-            <div id="jusyo"></div> <!--住所を表示する領域-->
+            <div class="jusyo"></div> <!--住所を表示する領域-->
               
             </div>
           </div>
@@ -210,10 +216,10 @@
     (function() {
       "use strict";
 
-      document.getElementById('btn').addEventListener('mousedown', function() {
+      document.getElementsByClassName('btn').addEventListener('mousedown', function() {
         this.className = 'pushed';
       });
-      document.getElementById('btn').addEventListener('mouseup', function() {
+      document.getElementsByClassName('btn').addEventListener('mouseup', function() {
         this.className = '';
       });
     })();
