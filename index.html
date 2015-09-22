@@ -18,7 +18,7 @@
       #judge {
         color: red;
       }
-      .jusyo {
+      #jusyo {
         color: green;
       }
       #hinmoku {max-width: 100%}
@@ -51,7 +51,7 @@
     <div style="text-align: center">
      <p><input type="button" value="現在地を調べる" onclick="getPosition()" class="btn"></p>
      <div id="judge"></div> <!--地域を判定する領域-->     
-     <p>現在の場所は<div class="jusyo"></div>です</p>
+     <p>現在の場所は<div id="jusyo"></div>です</p>
     </div>
     
     <div class="accordion" id="accordion3">
@@ -146,7 +146,7 @@
             <div id="help">
               
             <div id="map"></div> <!--地図を表示する領域-->  
-            <div class="jusyo"></div> <!--住所を表示する領域-->
+            <div id="jusyo"></div> <!--住所を表示する領域-->
               
             </div>
           </div>
