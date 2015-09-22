@@ -19,7 +19,7 @@
       #hinmoku2 {color: red; font-size: x-large;}
       
       .btn {
-        margin: 0px auto;
+        margin: 0 auto;
         width: 200px;
         padding: 5px; 
         border-radius: 5px; /* 角の丸み具合 */
@@ -208,9 +208,7 @@
   <script>
     (function() {
       "use strict";
-      document.getElementsByClassName('btn').addEventListener('click', function() {
-        
-      });
+
       document.getElementsByClassName('btn').addEventListener('mousedown', function() {
         this.className = 'pushed';
       });
