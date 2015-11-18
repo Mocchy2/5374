@@ -9,13 +9,13 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="25.135416mm"
-   height="8.4682293mm"
-   viewBox="0 0 89.062499 30.005536"
+   width="31.75mm"
+   height="8.1690102mm"
+   viewBox="0 0 112.5 28.945311"
    id="svg2"
    version="1.1"
    inkscape:version="0.91 r13725"
-   sodipodi:docname="shigennuno.svg">
+   sodipodi:docname="shigenkan.svg">
   <defs
      id="defs4" />
   <sodipodi:namedview
@@ -26,8 +26,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1.979899"
-     inkscape:cx="-79.677894"
-     inkscape:cy="70.347431"
+     inkscape:cx="-79.67789"
+     inkscape:cy="50.144378"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -36,7 +36,7 @@
      inkscape:window-x="-8"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
-     fit-margin-top="0.2"
+     fit-margin-top="0.4"
      fit-margin-left="0"
      fit-margin-right="0"
      fit-margin-bottom="0" />
@@ -56,7 +56,7 @@
      inkscape:label="レイヤー 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(-269.04019,-694.67812)">
+     transform="translate(-269.04019,-695.73834)">
     <flowRoot
        xml:space="preserve"
        id="flowRoot3350"
@@ -91,9 +91,13 @@
          style=""
          id="path3346" />
       <path
-         d="m 334.548,704.64459 -5.39062,0.70313 -0.11719,-4.92188 8.67188,-0.23437 3.51562,-4.57032 4.10156,1.99219 -1.75781,2.46094 14.17969,0.11719 0,3.63281 -10.66406,-0.11719 -6.44532,0.35156 -2.10937,3.04688 2.92969,-0.11719 0.11718,-1.99219 4.92188,-0.11718 -0.11719,1.875 q 4.45313,-0.23438 6.09375,0 3.16406,0.58593 3.28125,4.6875 l 0.11719,5.15625 q 0.11719,3.28125 -1.75781,4.33593 -1.52344,0.82032 -5.15625,0.70313 l -1.40625,-4.92188 2.8125,0 -0.11719,-6.44531 -3.86719,0.11719 -0.11719,11.36719 0.11719,2.57812 -5.39062,0 0.46875,-13.59375 -3.39844,0.35156 -0.35156,10.66407 -5.15625,0 0.46875,-6.91407 -1.28907,1.99219 -2.69531,-4.6875 5.50781,-7.5 z"
+         d="m 338.06363,702.53522 1.99219,-5.39063 5.03906,0.9375 -1.28906,3.86719 4.92187,-0.58594 q 3.51563,-0.46875 5.15625,1.75781 0.70313,0.9375 0.82031,2.57813 0,0.9375 -0.11718,2.8125 l -1.28907,14.53125 -5.50781,0 1.40625,-16.99219 -7.14844,0.82031 -4.33593,16.40625 -5.625,-1.28906 4.10156,-14.0625 -6.79688,1.40625 -0.11718,-5.39062 8.78906,-1.40625 z"
          style=""
          id="path3348" />
+      <path
+         d="m 359.15738,696.79303 9.84375,5.15625 -3.28125,5.03906 -9.72656,-5.85937 3.16406,-4.33594 z m 19.80469,9.14062 2.57812,4.6875 -20.625,13.24219 -3.63281,-4.92187 21.67969,-13.00782 z"
+         style=""
+         id="path3350" />
     </g>
   </g>
 </svg>
