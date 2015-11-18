@@ -1,9 +1,9 @@
 label,sublabel,description,styles,bgcolor
-燃やせるごみ,,,img/moyaserugomi.svg,#ea3b13
-燃やさないごみ,,,img/moyasanaigomi.svg,#708090
-資源プラスチック,,,,#77ae1f
-資源カン,,,,#2dc6aa
-資源ビン,,,,#2dc6aa
-資源ペットボトル,,,,#bbe400
-資源紙,,,img/shigenshi.svg,#27a047
-資源布,,,img/sodaigomi.svg,#08b925
+燁E��せるごみ,,,img/moyaserugomi.svg,#ea3b13
+燁E��さなぁE��み,,,img/moyasanaigomi.svg,#708090
+賁E���Eラスチック,,,img/shigenpurasutikku.svg,#77ae1f
+賁E��カン,,,img/shigenkan.svg,#2dc6aa
+賁E��ビン,,,img/shigenbin.svg,#2dc6aa
+賁E���EチE��ボトル,,,img/shigenpettobotoru.svg,#bbe400
+賁E��紁E,,,img/shigenshi.svg,#27a047
+賁E��币E,,,img/sodaigomi.svg,#08b925
